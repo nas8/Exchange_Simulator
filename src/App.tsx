@@ -1,14 +1,18 @@
-import React from 'react';
 import './App.css';
+import { BidList } from './components/BidList/BidList';
+import { Ticker } from './components/Ticker/Ticker';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </header>
+      <div>
+        <p>Bid list</p>
+        <BidList />
+      </div>
+      <div>
+        <p>Ticker</p>
+        <Ticker />
+      </div>
     </div>
   );
 }
