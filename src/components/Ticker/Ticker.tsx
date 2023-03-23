@@ -11,19 +11,22 @@ const options = [
 
 export const Ticker = () => {
   return (
-    <StyledTicker>
-      <Select isClearable isSearchable options={options} />
-      <input placeholder="amount"></input>
-      <ButtonsWrapper>
-        <ControlWrapper>
-          8.55
-          <button>SELL</button>
-        </ControlWrapper>
-        <ControlWrapper>
-          7.55
-          <button>BUY</button>
-        </ControlWrapper>
-      </ButtonsWrapper>
-    </StyledTicker>
+    <>
+      <p>Ticker</p>
+      <StyledTicker>
+        <Select isClearable isSearchable options={options} />
+        <input placeholder="amount"></input>
+        <ButtonsWrapper>
+          <ControlWrapper>
+            8.55
+            <button>SELL</button>
+          </ControlWrapper>
+          <ControlWrapper>
+            7.55
+            <button>BUY</button>
+          </ControlWrapper>
+        </ButtonsWrapper>
+      </StyledTicker>
+    </>
   );
 };

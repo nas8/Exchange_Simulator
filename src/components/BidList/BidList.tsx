@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTable, Column } from 'react-table';
 
-interface Data {
+interface Bid {
   id: number | string;
   creation_time: string;
   change_time: string;
@@ -12,64 +12,68 @@ interface Data {
   instrument: string;
 }
 
-export const BidList = () => {
-  const data = useMemo(
-    () => [
-      {
-        id: 1,
-        creation_time: '12.12.2000',
-        change_time: '12.12.2000',
-        status: 'Active',
-        side: 'Buy',
-        price: 8,
-        amount: 500000,
-        instrument: 'CNH/RUB',
-      },
-      {
-        id: 2,
-        creation_time: '12.12.2000',
-        change_time: '12.12.2000',
-        status: 'Active',
-        side: 'Buy',
-        price: 8,
-        amount: 500000,
-        instrument: 'CNH/RUB',
-      },
-      {
-        id: 3,
-        creation_time: '12.12.2000',
-        change_time: '12.12.2000',
-        status: 'Active',
-        side: 'Buy',
-        price: 8,
-        amount: 500000,
-        instrument: 'CNH/RUB',
-      },
-      {
-        id: 4,
-        creation_time: '12.12.2000',
-        change_time: '12.12.2000',
-        status: 'Active',
-        side: 'Buy',
-        price: 8,
-        amount: 500000,
-        instrument: 'CNH/RUB',
-      },
-      {
-        id: 5,
-        creation_time: '12.12.2000',
-        change_time: '12.12.2000',
-        status: 'Active',
-        side: 'Buy',
-        price: 8,
-        amount: 500000,
-        instrument: 'CNH/RUB',
-      },
-    ],
-    [],
-  );
+interface BidListProps {
+  data: Bid[];
+}
 
-  const columns = useMemo<Column<Data>[]>(
+export const BidList: React.FC<BidListProps> = ({ data }) => {
+  // const data = useMemo(
+  //   () => [
+  //     {
+  //       id: 1,
+  //       creation_time: '12.12.2000',
+  //       change_time: '12.12.2000',
+  //       status: 'Active',
+  //       side: 'Buy',
+  //       price: 8,
+  //       amount: 500000,
+  //       instrument: 'CNH/RUB',
+  //     },
+  //     {
+  //       id: 2,
+  //       creation_time: '12.12.2000',
+  //       change_time: '12.12.2000',
+  //       status: 'Active',
+  //       side: 'Buy',
+  //       price: 8,
+  //       amount: 500000,
+  //       instrument: 'CNH/RUB',
+  //     },
+  //     {
+  //       id: 3,
+  //       creation_time: '12.12.2000',
+  //       change_time: '12.12.2000',
+  //       status: 'Active',
+  //       side: 'Buy',
+  //       price: 8,
+  //       amount: 500000,
+  //       instrument: 'CNH/RUB',
+  //     },
+  //     {
+  //       id: 4,
+  //       creation_time: '12.12.2000',
+  //       change_time: '12.12.2000',
+  //       status: 'Active',
+  //       side: 'Buy',
+  //       price: 8,
+  //       amount: 500000,
+  //       instrument: 'CNH/RUB',
+  //     },
+  //     {
+  //       id: 5,
+  //       creation_time: '12.12.2000',
+  //       change_time: '12.12.2000',
+  //       status: 'Active',
+  //       side: 'Buy',
+  //       price: 8,
+  //       amount: 500000,
+  //       instrument: 'CNH/RUB',
+  //     },
+  //   ],
+  //   [],
+  // );
+
+  const columns = useMemo<Column<Bid>[]>(
     () => [
       {
         Header: 'Id',
@@ -113,47 +117,49 @@ export const BidList = () => {
   });
 
   return (
-    <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps()}
-                style={{
-                  borderBottom: 'solid 3px red',
-                  background: 'aliceblue',
-                  color: 'black',
-                  fontWeight: 'bold',
-                }}>
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    style={{
-                      padding: '10px',
-                      border: 'solid 1px gray',
-                      background: 'papayawhip',
-                    }}>
-                    {cell.render('Cell')}
-                  </td>
-                );
-              })}
+    <>
+      <p>Bid list</p>
+      <table
+        {...getTableProps()}
+        style={{ border: 'solid 1px black', padding: '10px', borderRadius: '10px' }}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th
+                  {...column.getHeaderProps()}
+                  style={{
+                    border: 'solid 1px black',
+                    color: 'black',
+                  }}>
+                  {column.render('Header')}
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return (
+                    <td
+                      {...cell.getCellProps()}
+                      style={{
+                        padding: '10px',
+                        border: 'solid 1px gray',
+                      }}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 };
