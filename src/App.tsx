@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import { BidList } from './components/BidList/BidList';
 import { Ticker } from './components/Ticker/Ticker';
+import WSConnector from './WSClient';
 
 interface Data {
   id: number | string;
@@ -15,58 +16,60 @@ interface Data {
 }
 
 export interface ClientMessage {
-  type: ClientMessageType;
+  messageType: ClientMessageType;
 }
 
 enum ClientMessageType {
   DataRequested = 'DataRequested',
+  BidData = 'BidDataRequest',
 }
 
 function App() {
   const [data, setData] = useState<Data[]>([]);
+  const webSocket = useRef<WSConnector | null>(null);
 
-  const handleConnection = (webSocket: WebSocket) => {
-    const requestData: ClientMessage = {
-      type: ClientMessageType.DataRequested,
+  const handleConnection = (socket: any) => {
+    const requestLogsMessage: ClientMessage = {
+      messageType: ClientMessageType.DataRequested,
     };
-
-    webSocket.send(JSON.stringify(requestData));
+    socket.send(requestLogsMessage);
   };
 
   const handleIncomingMessage = (message: MessageEvent) => {
     const messageData = JSON.parse(message.data);
 
     setData((currentMessages) => {
-      return [...currentMessages, messageData];
+      return [messageData, ...currentMessages];
     });
   };
 
   useEffect(() => {
-    const webSocket = new WebSocket('ws://127.0.0.1:9000');
+    const socket = new WSConnector();
+    socket.connect();
 
     setData([]);
 
-    webSocket.addEventListener('open', () => {
-      handleConnection(webSocket);
+    socket.on('open', () => {
+      handleConnection(socket);
     });
 
-    webSocket.addEventListener('message', (message) => {
+    socket.on('message', (message: MessageEvent) => {
       handleIncomingMessage(message);
     });
 
+    webSocket.current = socket;
+
     return () => {
-      webSocket.close();
+      socket.disconnect();
     };
   }, []);
 
+  console.log(data);
+
   return (
     <div className="App">
-      <div>
-        <BidList data={data} />
-      </div>
-      <div>
-        <Ticker />
-      </div>
+      <BidList data={data} />
+      <Ticker webSocket={webSocket.current} />
     </div>
   );
 }

@@ -11,33 +11,7 @@ export default class WSConnector {
   }
 
   connect = () => {
-    this.connection = new WebSocket('ws://127.0.0.1:9000'); // ws://127.0.0.1:9000/ws/
-    this.connection.onclose = () => {
-      this.connection = undefined;
-    };
-
-    this.connection.onerror = () => {
-      console.log('Error');
-    };
-
-    this.connection.onopen = () => {
-      console.log('Connection open');
-    };
-
-    this.connection.onmessage = (event) => {
-      // console.log(event.data);
-      const message: ServerEnvelope = event.data; // JSON.parse(event.data)
-      switch (message.messageType) {
-        case ServerMessageType.success:
-          break;
-        case ServerMessageType.error:
-          break;
-        case ServerMessageType.executionReport:
-          break;
-        case ServerMessageType.marketDataUpdate:
-          break;
-      }
-    };
+    this.connection = new WebSocket('ws://127.0.0.1:9000');
   };
 
   disconnect = () => {
@@ -66,7 +40,7 @@ export default class WSConnector {
     });
   };
 
-  placeOrder = (instrument: Instrument, side: OrderSide, amount: Decimal, price: Decimal) => {
+  placeOrder = (instrument: string, side: string, amount: Decimal, price: Decimal) => {
     this.send({
       messageType: ClientMessageType.placeOrder,
       message: {
@@ -76,5 +50,11 @@ export default class WSConnector {
         price,
       },
     });
+  };
+
+  on = (eventName: string, callback: any) => {
+    if (this.connection) {
+      this.connection.addEventListener(eventName, callback);
+    }
   };
 }

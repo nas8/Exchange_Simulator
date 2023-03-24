@@ -1,8 +1,7 @@
 const WebSocket = require('ws');
 
-const messages = [
+const bids = [
   {
-    id: 1,
     creation_time: '12.12.2000',
     change_time: '12.12.2000',
     status: 'Active',
@@ -12,7 +11,6 @@ const messages = [
     instrument: 'CNH/RUB',
   },
   {
-    id: 2,
     creation_time: '12.12.2000',
     change_time: '12.12.2000',
     status: 'Active',
@@ -22,7 +20,6 @@ const messages = [
     instrument: 'CNH/RUB',
   },
   {
-    id: 3,
     creation_time: '12.12.2000',
     change_time: '12.12.2000',
     status: 'Active',
@@ -32,7 +29,6 @@ const messages = [
     instrument: 'CNH/RUB',
   },
   {
-    id: 4,
     creation_time: '12.12.2000',
     change_time: '12.12.2000',
     status: 'Active',
@@ -42,7 +38,6 @@ const messages = [
     instrument: 'CNH/RUB',
   },
   {
-    id: 5,
     creation_time: '12.12.2000',
     change_time: '12.12.2000',
     status: 'Active',
@@ -57,15 +52,33 @@ const webSocketServer = new WebSocket.Server({
   port: 9000,
 });
 
-webSocketServer.on('connection', (socket) => {
-  socket.on('message', (message) => {
-    const messageData = JSON.parse(message.toString());
-    if (messageData.type === 'DataRequested') {
-      messages.forEach((message) => {
-        socket.send(JSON.stringify(message));
+webSocketServer.on('connection', onConnect);
+
+function onConnect(socket) {
+  socket.on('message', (bid) => {
+    const messageData = JSON.parse(bid.toString());
+
+    if (messageData.messageType === 'DataRequested') {
+      bids.forEach((bid, index) => {
+        const formattedMessage = { id: index + 1, ...bid };
+        socket.send(JSON.stringify(formattedMessage));
       });
     }
+
+    if (messageData.messageType === 3) {
+      const newBid = {
+        id: bids.length,
+        creation_time: new Date(),
+        change_time: 'not changed',
+        status: 'Active',
+        ...messageData.message,
+      };
+
+      bids.push(newBid);
+
+      socket.send(JSON.stringify(newBid));
+    }
   });
-});
+}
 
 console.log('Сервер запущен на 9000 порту');

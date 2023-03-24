@@ -17,62 +17,6 @@ interface BidListProps {
 }
 
 export const BidList: React.FC<BidListProps> = ({ data }) => {
-  // const data = useMemo(
-  //   () => [
-  //     {
-  //       id: 1,
-  //       creation_time: '12.12.2000',
-  //       change_time: '12.12.2000',
-  //       status: 'Active',
-  //       side: 'Buy',
-  //       price: 8,
-  //       amount: 500000,
-  //       instrument: 'CNH/RUB',
-  //     },
-  //     {
-  //       id: 2,
-  //       creation_time: '12.12.2000',
-  //       change_time: '12.12.2000',
-  //       status: 'Active',
-  //       side: 'Buy',
-  //       price: 8,
-  //       amount: 500000,
-  //       instrument: 'CNH/RUB',
-  //     },
-  //     {
-  //       id: 3,
-  //       creation_time: '12.12.2000',
-  //       change_time: '12.12.2000',
-  //       status: 'Active',
-  //       side: 'Buy',
-  //       price: 8,
-  //       amount: 500000,
-  //       instrument: 'CNH/RUB',
-  //     },
-  //     {
-  //       id: 4,
-  //       creation_time: '12.12.2000',
-  //       change_time: '12.12.2000',
-  //       status: 'Active',
-  //       side: 'Buy',
-  //       price: 8,
-  //       amount: 500000,
-  //       instrument: 'CNH/RUB',
-  //     },
-  //     {
-  //       id: 5,
-  //       creation_time: '12.12.2000',
-  //       change_time: '12.12.2000',
-  //       status: 'Active',
-  //       side: 'Buy',
-  //       price: 8,
-  //       amount: 500000,
-  //       instrument: 'CNH/RUB',
-  //     },
-  //   ],
-  //   [],
-  // );
-
   const columns = useMemo<Column<Bid>[]>(
     () => [
       {
@@ -117,7 +61,7 @@ export const BidList: React.FC<BidListProps> = ({ data }) => {
   });
 
   return (
-    <>
+    <div>
       <p>Bid list</p>
       <table
         {...getTableProps()}
@@ -160,6 +104,6 @@ export const BidList: React.FC<BidListProps> = ({ data }) => {
           })}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
