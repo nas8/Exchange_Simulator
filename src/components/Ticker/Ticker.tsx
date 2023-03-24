@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import Decimal from 'decimal.js';
 import Select from 'react-select';
 import { OrderSide, Instrument } from '../../Enums';
@@ -22,27 +24,43 @@ interface TickerProps {
 }
 
 export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
+  const [instrument, setInstrument] = useState<string | null>(null);
+  const [amount, setAmount] = useState('');
+
   const handleChange = (option: SelectOption | null) => {
-    console.log(option);
+    if (option) {
+      setInstrument(option?.label);
+    }
   };
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target);
+    const value = Number(event.target.value);
+
+    if (value) {
+      setAmount(event.target.value);
+      return;
+    }
+
+    setAmount('');
   };
 
   const handleSellClick = (ws: WSConnector | null) => {
     const side = 'Sell';
-    const amount = new Decimal(100);
+    const decimalAmount = amount ? new Decimal(amount) : null;
     const price = new Decimal(8);
 
-    if (ws) {
-      ws.placeOrder('CNH/RUB', side, amount, price);
+    if (ws && decimalAmount && instrument) {
+      ws.placeOrder(instrument, side, decimalAmount, price);
     }
   };
 
   const handleBuyClick = (ws: WSConnector | null) => {
-    if (ws) {
-      ws.send('Buy');
+    const side = 'Buy';
+    const decimalAmount = amount ? new Decimal(amount) : null;
+    const price = new Decimal(8);
+
+    if (ws && decimalAmount && instrument) {
+      ws.placeOrder(instrument, side, decimalAmount, price);
     }
   };
 
@@ -50,20 +68,19 @@ export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
     <div>
       <p>Ticker</p>
       <StyledTicker>
-        <Select
-          isClearable
-          isSearchable
-          options={options}
-          onChange={(option) => handleChange(option)}
+        <Select isSearchable options={options} onChange={(option) => handleChange(option)} />
+        <input
+          value={amount}
+          placeholder="amount"
+          onChange={(event) => handleAmountChange(event)}
         />
-        <input placeholder="amount" onChange={(event) => handleAmountChange(event)} />
         <ButtonsWrapper>
           <ControlWrapper>
-            {/* 8.55 */}
+            8.55
             <button onClick={() => handleSellClick(webSocket)}>SELL</button>
           </ControlWrapper>
           <ControlWrapper>
-            {/* 7.55 */}
+            7.55
             <button onClick={() => handleBuyClick(webSocket)}>BUY</button>
           </ControlWrapper>
         </ButtonsWrapper>

@@ -64,8 +64,6 @@ function App() {
     };
   }, []);
 
-  console.log(data);
-
   return (
     <div className="App">
       <BidList data={data} />
