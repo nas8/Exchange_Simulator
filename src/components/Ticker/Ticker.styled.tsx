@@ -17,7 +17,10 @@ export const ButtonsWrapper = styled.div`
 `;
 export const ControlWrapper = styled.div`
   display: flex;
+  max-width: 70px;
+  overflow: hidden;
   flex-direction: column;
+
   gap: 10px;
 `;
 

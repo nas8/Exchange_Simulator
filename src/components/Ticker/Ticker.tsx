@@ -6,12 +6,20 @@ import WSConnector from '../../WSClient';
 import { StyledTicker, ButtonsWrapper, ControlWrapper, StyledInput } from './Ticker.styled';
 
 const options = [
-  { value: 'EUR/USD', label: 'EUR/USD' },
-  { value: 'CNH/RUB', label: 'CNH/RUB' },
-  { value: 'EUR/RUB', label: 'EUR/RUB' },
-  { value: 'TRY/RUB', label: 'TRY/RUB' },
-  { value: 'BYN/RUB', label: 'BYN/RUB' },
+  { value: 'eur_usd', label: 'EUR/USD' },
+  { value: 'chn_rub', label: 'CNH/RUB' },
+  { value: 'eur_rub', label: 'EUR/RUB' },
+  { value: 'try_rub', label: 'TRY/RUB' },
+  { value: 'byn_rub', label: 'BYN/RUB' },
 ];
+
+const prices = {
+  eur_usd: 1.08,
+  chn_rub: 11.26,
+  eur_rub: 83.33,
+  try_rub: 4.06,
+  byn_rub: 30.59,
+};
 
 type SelectOption = {
   value: string | number;
@@ -23,12 +31,16 @@ interface TickerProps {
 }
 
 export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
-  const [instrument, setInstrument] = useState<string>('EUR/USD');
+  const [instrument, setInstrument] = useState<SelectOption>(options[0]);
   const [amount, setAmount] = useState<string | number>(1);
+  const [price, setPrice] = useState(prices[instrument.value as keyof typeof prices]);
 
   const handleChange = (option: SelectOption | null) => {
     if (option) {
-      setInstrument(option?.label);
+      const priceCode = option.value;
+
+      setInstrument(option);
+      setPrice(prices[priceCode as keyof typeof prices]);
     }
   };
 
@@ -44,20 +56,20 @@ export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
   const handleSellClick = (ws: WSConnector | null) => {
     const side = 'Sell';
     const decimalAmount = amount > 0 ? new Decimal(amount) : null;
-    const price = new Decimal(8);
+    const decimalPrice = new Decimal((price * Number(amount)).toFixed(2));
 
     if (ws && decimalAmount && instrument) {
-      ws.placeOrder(instrument, side, decimalAmount, price);
+      ws.placeOrder(instrument.label, side, decimalAmount, decimalPrice);
     }
   };
 
   const handleBuyClick = (ws: WSConnector | null) => {
     const side = 'Buy';
     const decimalAmount = amount > 0 ? new Decimal(amount) : null;
-    const price = new Decimal(8);
+    const decimalPrice = new Decimal((price * Number(amount)).toFixed(2));
 
     if (ws && decimalAmount && instrument) {
-      ws.placeOrder(instrument, side, decimalAmount, price);
+      ws.placeOrder(instrument.label, side, decimalAmount, decimalPrice);
     }
   };
 
@@ -79,12 +91,16 @@ export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
         />
         <ButtonsWrapper>
           <ControlWrapper>
-            8.55
-            <button onClick={() => handleSellClick(webSocket)}>SELL</button>
+            {(price * Number(amount)).toFixed(2)}
+            <button style={{ width: '50px' }} onClick={() => handleSellClick(webSocket)}>
+              SELL
+            </button>
           </ControlWrapper>
           <ControlWrapper>
-            7.55
-            <button onClick={() => handleBuyClick(webSocket)}>BUY</button>
+            {(price * Number(amount)).toFixed(2)}
+            <button style={{ width: '50px' }} onClick={() => handleBuyClick(webSocket)}>
+              BUY
+            </button>
           </ControlWrapper>
         </ButtonsWrapper>
       </StyledTicker>

@@ -55,7 +55,7 @@ const webSocketServer = new WebSocket.Server({
 });
 
 const generateStatus = () => {
-  const statuses = ['Filled', 'Rejected', 'Cancelled'];
+  const statuses = ['Filled', 'Rejected'];
 
   const min = 0;
   const max = statuses.length - 1;
