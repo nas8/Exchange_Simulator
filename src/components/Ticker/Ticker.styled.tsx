@@ -20,3 +20,5 @@ export const ControlWrapper = styled.div`
   flex-direction: column;
   gap: 10px;
 `;
+
+export const StyledInput = styled.input``;

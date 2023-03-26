@@ -29,18 +29,37 @@ function App() {
   const webSocket = useRef<WSConnector | null>(null);
 
   const handleConnection = (socket: any) => {
-    const requestLogsMessage: ClientMessage = {
+    const requestData: ClientMessage = {
       messageType: ClientMessageType.DataRequested,
     };
-    socket.send(requestLogsMessage);
+    socket.send(requestData);
   };
 
   const handleIncomingMessage = (message: MessageEvent) => {
     const messageData = JSON.parse(message.data);
 
-    setData((currentMessages) => {
-      return [messageData, ...currentMessages];
-    });
+    if (messageData.messageType === 'data') {
+      setData((currentMessages) => {
+        return [messageData.message, ...currentMessages];
+      });
+    }
+
+    if (messageData.messageType === 'newOrder') {
+      setData((currentMessages) => {
+        return [messageData.message, ...currentMessages];
+      });
+    }
+
+    if (messageData.messageType === 'updateOrder') {
+      setData((currentMessages) => {
+        return currentMessages.map((message) => {
+          if (message.id === messageData.message.id) {
+            return messageData.message;
+          }
+          return message;
+        });
+      });
+    }
   };
 
   useEffect(() => {

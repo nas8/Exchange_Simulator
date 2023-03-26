@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTable, Column } from 'react-table';
+import { useTable, Column, usePagination } from 'react-table';
 
 interface Bid {
   id: number | string;

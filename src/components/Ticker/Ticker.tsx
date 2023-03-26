@@ -2,14 +2,13 @@ import { useState } from 'react';
 
 import Decimal from 'decimal.js';
 import Select from 'react-select';
-import { OrderSide, Instrument } from '../../Enums';
 import WSConnector from '../../WSClient';
-import { StyledTicker, ButtonsWrapper, ControlWrapper } from './Ticker.styled';
+import { StyledTicker, ButtonsWrapper, ControlWrapper, StyledInput } from './Ticker.styled';
 
 const options = [
+  { value: 'EUR/USD', label: 'EUR/USD' },
   { value: 'CNH/RUB', label: 'CNH/RUB' },
   { value: 'EUR/RUB', label: 'EUR/RUB' },
-  { value: 'EUR/USD', label: 'EUR/USD' },
   { value: 'TRY/RUB', label: 'TRY/RUB' },
   { value: 'BYN/RUB', label: 'BYN/RUB' },
 ];
@@ -24,8 +23,8 @@ interface TickerProps {
 }
 
 export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
-  const [instrument, setInstrument] = useState<string | null>(null);
-  const [amount, setAmount] = useState('');
+  const [instrument, setInstrument] = useState<string>('EUR/USD');
+  const [amount, setAmount] = useState<string | number>(1);
 
   const handleChange = (option: SelectOption | null) => {
     if (option) {
@@ -36,17 +35,15 @@ export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
 
-    if (value) {
+    if (!isNaN(value)) {
       setAmount(event.target.value);
       return;
     }
-
-    setAmount('');
   };
 
   const handleSellClick = (ws: WSConnector | null) => {
     const side = 'Sell';
-    const decimalAmount = amount ? new Decimal(amount) : null;
+    const decimalAmount = amount > 0 ? new Decimal(amount) : null;
     const price = new Decimal(8);
 
     if (ws && decimalAmount && instrument) {
@@ -56,7 +53,7 @@ export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
 
   const handleBuyClick = (ws: WSConnector | null) => {
     const side = 'Buy';
-    const decimalAmount = amount ? new Decimal(amount) : null;
+    const decimalAmount = amount > 0 ? new Decimal(amount) : null;
     const price = new Decimal(8);
 
     if (ws && decimalAmount && instrument) {
@@ -68,8 +65,14 @@ export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
     <div>
       <p>Ticker</p>
       <StyledTicker>
-        <Select isSearchable options={options} onChange={(option) => handleChange(option)} />
-        <input
+        <Select
+          defaultValue={options[0]}
+          isSearchable
+          options={options}
+          onChange={(option) => handleChange(option)}
+        />
+        <StyledInput
+          style={{ borderRadius: '5px', height: '30px' }}
           value={amount}
           placeholder="amount"
           onChange={(event) => handleAmountChange(event)}
