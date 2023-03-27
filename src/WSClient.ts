@@ -51,6 +51,12 @@ export default class WSConnector {
     });
   };
 
+  clearAddedBids = () => {
+    this.send({
+      messageType: 'clearData',
+    });
+  };
+
   on = (eventName: string, callback: any) => {
     if (this.connection) {
       this.connection.addEventListener(eventName, callback);

@@ -1,3 +1,5 @@
+const WebSocket = require('ws');
+
 let bids = [
   {
     creation_time: '26.03.2023 14:15:11',
@@ -12,7 +14,7 @@ let bids = [
     creation_time: '26.03.2023 14:15:11',
     change_time: '26.03.2023 14:15:11',
     status: 'Rejected',
-    side: 'Buy',
+    side: 'Sell',
     price: 8,
     amount: 500000,
     instrument: 'CNH/RUB',
@@ -30,7 +32,7 @@ let bids = [
     creation_time: '26.03.2023 14:15:11',
     change_time: '26.03.2023 14:15:11',
     status: 'Filled',
-    side: 'Buy',
+    side: 'Sell',
     price: 8,
     amount: 500000,
     instrument: 'CNH/RUB',
@@ -39,7 +41,7 @@ let bids = [
     creation_time: '26.03.2023 14:15:11',
     change_time: '26.03.2023 14:15:11',
     status: 'Cancelled',
-    side: 'Buy',
+    side: 'Sell',
     price: 8,
     amount: 500000,
     instrument: 'CNH/RUB',
@@ -57,7 +59,7 @@ let bids = [
     creation_time: '26.03.2023 14:15:11',
     change_time: '26.03.2023 14:15:11',
     status: 'Rejected',
-    side: 'Buy',
+    side: 'Sell',
     price: 8,
     amount: 500000,
     instrument: 'CNH/RUB',
@@ -75,7 +77,7 @@ let bids = [
     creation_time: '26.03.2023 14:15:11',
     change_time: '26.03.2023 14:15:11',
     status: 'Filled',
-    side: 'Buy',
+    side: 'Sell',
     price: 8,
     amount: 500000,
     instrument: 'CNH/RUB',
@@ -93,7 +95,7 @@ let bids = [
     creation_time: '26.03.2023 14:15:11',
     change_time: '26.03.2023 14:15:11',
     status: 'Filled',
-    side: 'Buy',
+    side: 'Sell',
     price: 8,
     amount: 500000,
     instrument: 'CNH/RUB',
@@ -111,7 +113,7 @@ let bids = [
     creation_time: '26.03.2023 14:15:11',
     change_time: '26.03.2023 14:15:11',
     status: 'Filled',
-    side: 'Buy',
+    side: 'Sell',
     price: 8,
     amount: 500000,
     instrument: 'CNH/RUB',
@@ -129,14 +131,12 @@ let bids = [
     creation_time: '26.03.2023 14:15:11',
     change_time: '26.03.2023 14:15:11',
     status: 'Cancelled',
-    side: 'Buy',
+    side: 'Sell',
     price: 8,
     amount: 500000,
     instrument: 'CNH/RUB',
   },
 ];
-
-const WebSocket = require('ws');
 
 const bidsPending = [];
 
@@ -164,14 +164,22 @@ function onConnect(socket) {
     const currentTime = new Date().toLocaleTimeString('ru-RU');
 
     if (messageData.messageType === 'DataRequested') {
-      bids.forEach((bid, index) => {
+      if (bids.length > 0) {
+        bids.forEach((bid, index) => {
+          const formattedMessage = {
+            messageType: 'data',
+            message: { id: index + 1, ...bid },
+          };
+
+          socket.send(JSON.stringify(formattedMessage));
+        });
+      } else {
         const formattedMessage = {
           messageType: 'data',
-          message: { id: index + 1, ...bid },
+          message: null,
         };
-
         socket.send(JSON.stringify(formattedMessage));
-      });
+      }
     }
 
     if (messageData.messageType === 3) {
@@ -190,6 +198,17 @@ function onConnect(socket) {
 
       bids.push(newBid);
       bidsPending.push(newBid);
+
+      socket.send(JSON.stringify(formattedMessage));
+    }
+
+    if (messageData.messageType === 'clearData') {
+      bids = [];
+
+      const formattedMessage = {
+        messageType: 'clearData',
+        message: [],
+      };
 
       socket.send(JSON.stringify(formattedMessage));
     }

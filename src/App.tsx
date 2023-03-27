@@ -62,6 +62,14 @@ function App() {
         });
       });
     }
+
+    if (messageData.messageType === 'clearData') {
+      setData([...messageData.message]);
+    }
+
+    if (!messageData.message) {
+      setData([]);
+    }
   };
 
   useEffect(() => {
@@ -85,10 +93,23 @@ function App() {
     };
   }, []);
 
+  const renderBidList = (connectionStatus: number | undefined) => {
+    if (connectionStatus === undefined || connectionStatus === 2 || connectionStatus === 3) {
+      return <span style={{ fontSize: '20px' }}>No connection...</span>;
+    }
+
+    if (connectionStatus === 0) {
+      return <span style={{ fontSize: '20px' }}>Loading...</span>;
+    }
+
+    return <BidList data={data}></BidList>;
+  };
+
   return (
     <div className="App">
-      {connectionState === 0 && <span style={{ fontSize: '20px' }}>Loading...</span>}
-      {connectionState === 1 && <BidList data={data} />}
+      <div style={{ display: 'column', alignItems: 'center' }}>
+        {renderBidList(connectionState)}
+      </div>
       <Ticker webSocket={webSocket.current} />
     </div>
   );

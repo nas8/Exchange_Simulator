@@ -65,7 +65,6 @@ export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
-
     if (!isNaN(value)) {
       setAmount(event.target.value);
     }
@@ -91,38 +90,60 @@ export const Ticker: React.FC<TickerProps> = ({ webSocket }) => {
     }
   };
 
+  const renderNotification = (amount: number | string) => {
+    if (!amount || amount === '0') {
+      return (
+        <span style={{ fontSize: '13px', color: 'red' }}>Amount field can't be empty or null</span>
+      );
+    }
+  };
+
+  const handleClearClick = (ws: WSConnector | null) => {
+    if (ws) {
+      ws.clearAddedBids();
+    }
+  };
+
   return (
-    <StyledTicker>
-      <Select
-        defaultValue={options[0]}
-        isSearchable
-        options={options}
-        onChange={(option) => handleChange(option)}
-      />
-      <input
-        style={{ borderRadius: '5px', height: '30px' }}
-        value={amount}
-        placeholder="amount"
-        onChange={(event) => handleAmountChange(event)}
-      />
-      <ButtonsWrapper>
-        <ControlWrapper>
-          <span style={{ fontSize: '20px', alignSelf: 'flex-start' }}>
-            {(sellPrice * Number(amount)).toFixed(2)}
-          </span>
-          <SellButton style={{ width: '50px' }} onClick={() => handleSellClick(webSocket)}>
-            SELL
-          </SellButton>
-        </ControlWrapper>
-        <ControlWrapper>
-          <span style={{ fontSize: '20px', alignSelf: 'flex-start' }}>
-            {(buyPrice * Number(amount)).toFixed(2)}
-          </span>
-          <BuyButton style={{ width: '50px' }} onClick={() => handleBuyClick(webSocket)}>
-            BUY
-          </BuyButton>
-        </ControlWrapper>
-      </ButtonsWrapper>
-    </StyledTicker>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
+      <StyledTicker>
+        <Select
+          defaultValue={options[0]}
+          isSearchable
+          options={options}
+          onChange={(option) => handleChange(option)}
+        />
+        <input
+          style={{ borderRadius: '5px', height: '30px' }}
+          value={amount}
+          placeholder="amount"
+          onChange={(event) => handleAmountChange(event)}
+        />
+        <ButtonsWrapper>
+          <ControlWrapper>
+            <span style={{ fontSize: '20px', alignSelf: 'flex-start' }}>
+              {(sellPrice * Number(amount)).toFixed(2)}
+            </span>
+            <SellButton style={{ width: '50px' }} onClick={() => handleSellClick(webSocket)}>
+              SELL
+            </SellButton>
+          </ControlWrapper>
+          <ControlWrapper>
+            <span style={{ fontSize: '20px', alignSelf: 'flex-start' }}>
+              {(buyPrice * Number(amount)).toFixed(2)}
+            </span>
+            <BuyButton style={{ width: '50px' }} onClick={() => handleBuyClick(webSocket)}>
+              BUY
+            </BuyButton>
+          </ControlWrapper>
+        </ButtonsWrapper>
+      </StyledTicker>
+      {renderNotification(amount)}
+      <button
+        style={{ borderRadius: '5px', cursor: 'pointer', height: '20px', marginTop: '10px' }}
+        onClick={() => handleClearClick(webSocket)}>
+        Clear bids
+      </button>
+    </div>
   );
 };

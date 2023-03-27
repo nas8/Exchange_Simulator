@@ -17,7 +17,7 @@ interface BidListProps {
   data: Bid[];
 }
 
-export const BidList: React.FC<BidListProps> = ({ data }) => {
+export const BidList: React.FC<BidListProps> = ({ data = [] }) => {
   const columns = useMemo<Column<Bid>[]>(
     () => [
       {
@@ -102,6 +102,20 @@ export const BidList: React.FC<BidListProps> = ({ data }) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell: any) => {
+                  if (cell.value === 'Buy') {
+                    return (
+                      <td style={{ color: 'green' }} {...cell.getCellProps()}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  }
+                  if (cell.value === 'Sell') {
+                    return (
+                      <td style={{ color: 'red' }} {...cell.getCellProps()}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  }
                   return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
                 })}
               </tr>
