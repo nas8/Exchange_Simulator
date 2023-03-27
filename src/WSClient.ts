@@ -1,7 +1,6 @@
 import { ClientMessage } from './Models/ClientMessages';
-import { ClientMessageType, Instrument, OrderSide, ServerMessageType } from './Enums';
+import { ClientMessageType, Instrument } from './Enums';
 import Decimal from 'decimal.js';
-import { ServerEnvelope } from './Models/ServerMessages';
 
 export default class WSConnector {
   connection: WebSocket | undefined;

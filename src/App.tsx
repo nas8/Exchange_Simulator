@@ -28,6 +28,8 @@ function App() {
   const [data, setData] = useState<Data[]>([]);
   const webSocket = useRef<WSConnector | null>(null);
 
+  const connectionState = webSocket.current?.connection?.readyState;
+
   const handleConnection = (socket: any) => {
     const requestData: ClientMessage = {
       messageType: ClientMessageType.DataRequested,
@@ -85,7 +87,8 @@ function App() {
 
   return (
     <div className="App">
-      <BidList data={data} />
+      {connectionState === 0 && <span style={{ fontSize: '20px' }}>Loading...</span>}
+      {connectionState === 1 && <BidList data={data} />}
       <Ticker webSocket={webSocket.current} />
     </div>
   );

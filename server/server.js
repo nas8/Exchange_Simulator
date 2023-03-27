@@ -1,5 +1,3 @@
-const WebSocket = require('ws');
-
 let bids = [
   {
     creation_time: '26.03.2023 14:15:11',
@@ -46,7 +44,99 @@ let bids = [
     amount: 500000,
     instrument: 'CNH/RUB',
   },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Filled',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Rejected',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Filled',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Filled',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Cancelled',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Filled',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Rejected',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Filled',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Filled',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
+  {
+    creation_time: '26.03.2023 14:15:11',
+    change_time: '26.03.2023 14:15:11',
+    status: 'Cancelled',
+    side: 'Buy',
+    price: 8,
+    amount: 500000,
+    instrument: 'CNH/RUB',
+  },
 ];
+
+const WebSocket = require('ws');
 
 const bidsPending = [];
 
@@ -129,10 +219,10 @@ function onConnect(socket) {
           return bid;
         });
 
-        bids = [...updatedBids];
+        bids = updatedBids;
 
         socket.send(JSON.stringify(formattedMessage));
-      }, 3000);
+      }, 2000);
     }
   });
 }
