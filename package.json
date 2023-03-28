@@ -25,7 +25,7 @@
     "test": "react-scripts test",
     "server": "node ./server/server.js",
     "dev": "react-scripts start & node ./server/server.js",
-    "deploy": "gh-pages -d build & node ./server/server.js",
+    "deploy": "gh-pages -d build",
     "predeploy": "npm run build"
   },
   "eslintConfig": {
