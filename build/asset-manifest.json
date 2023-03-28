@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Exchange_Simulator/static/css/main.4df5994d.css",
+    "main.js": "/Exchange_Simulator/static/js/main.d6135c86.js",
+    "index.html": "/Exchange_Simulator/index.html",
+    "main.4df5994d.css.map": "/Exchange_Simulator/static/css/main.4df5994d.css.map",
+    "main.d6135c86.js.map": "/Exchange_Simulator/static/js/main.d6135c86.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4df5994d.css",
+    "static/js/main.d6135c86.js"
+  ]
+}
