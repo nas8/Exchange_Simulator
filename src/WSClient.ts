@@ -10,7 +10,7 @@ export default class WSConnector {
   }
 
   connect = () => {
-    this.connection = new WebSocket('ws://127.0.0.1:9000');
+    this.connection = new WebSocket('ws://exchange-simulator.onrender.com');
   };
 
   disconnect = () => {
